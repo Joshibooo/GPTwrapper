@@ -14,8 +14,7 @@ async function sendQuestion() {
     responseArea.innerHTML = 'Thinking...';
 
     try {
-        // TODO: Replace with your actual API endpoint
-        const response = await fetch('/api/chat', {
+        const response = await fetch('http://localhost:5000/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,10 +23,13 @@ async function sendQuestion() {
         });
 
         const data = await response.json();
-        responseArea.innerHTML = data.answer || 'Sorry, I couldn\'t process your question.';
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        responseArea.innerHTML = data.answer;
     } catch (error) {
         console.error('Error:', error);
-        responseArea.innerHTML = 'Sorry, there was an error processing your question.';
+        responseArea.innerHTML = 'Sorry, there was an error processing your question. Please try again.';
     }
 }
 
